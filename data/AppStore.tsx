@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Listing, listings as seedListings } from "@/data/listings";
+import { fetchListingsFromApi } from "@/data/api";
 
 type AppStoreValue = {
   listings: Listing[];
@@ -32,7 +33,15 @@ export function AppStoreProvider({ children }: { children: React.ReactNode }) {
         if (storedSaved) setSavedIds(JSON.parse(storedSaved));
         if (storedMine) setMyListingIds(JSON.parse(storedMine));
       } catch {
-        // Keep the seeded demo data if local storage is unavailable.
+        // Keep seeded demo data if local storage is unavailable.
+      }
+      try {
+        const remoteItems = await fetchListingsFromApi();
+        if (active && remoteItems && remoteItems.length > 0) {
+          setItems(remoteItems);
+        }
+      } catch {
+        // The app remains usable offline with locally persisted demo data.
       }
     })();
     return () => { active = false; };
