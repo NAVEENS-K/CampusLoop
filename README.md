@@ -1,6 +1,6 @@
 # CampusLoop
 
-CampusLoop is a campus-only second-hand marketplace prototype built with Expo, React Native, TypeScript, Spring Boot, and MySQL.
+CampusLoop is a campus second-hand marketplace built with Expo, React Native, TypeScript, Spring Boot, and MySQL.
 
 ## Run the mobile app
 Requirements: Node.js LTS and npm.
@@ -12,9 +12,7 @@ npm run typecheck
 npx expo start
 ```
 
-For a web preview run `npx expo start --clear` and press `w`. On Android, scan the QR code in Expo Go or press `a` with an emulator configured.
-
-The app currently supports a polished Explore/Search UI, category filters, saved items, locally persisted listing creation, listing details, local demo chat, and profile summaries. Local listing and wishlist state is stored with AsyncStorage. Demo chats and purchase requests are not yet shared between users.
+For Android UI development, scan the QR code in Expo Go. **Razorpay checkout requires a native development/production build and does not run inside Expo Go.** Rebuild the app after installing the native SDK.
 
 ## Run the Spring Boot + MySQL API
 Requirements: Java 21, Maven 3.9+, Docker Desktop.
@@ -27,9 +25,14 @@ mvn spring-boot:run
 
 Health check: `http://localhost:8080/api/health`; active listings: `http://localhost:8080/api/listings`.
 
-To connect the Expo client, create a root `.env` file with `EXPO_PUBLIC_API_URL` set to the API host reachable from your device. Use `http://10.0.2.2:8080` for the Android emulator, `http://localhost:8080` for a browser on the same computer, or your computer's LAN IP for a physical phone. Restart Expo after changing the variable. Keep production credentials out of the client.
+Set `EXPO_PUBLIC_API_URL` in a root `.env` file. Use `http://10.0.2.2:8080` for the Android emulator, `http://localhost:8080` for a browser on the same computer, or your computer's LAN IP for a physical phone. Restart Expo after changing the variable.
 
-The API is currently a backend foundation: health and listing reads, JPA/MySQL setup, and local development CORS. Authentication, college email verification, authorized listing writes, persistent chat, moderation, orders, and payment-provider integration remain to be implemented and security-tested before production.
+## Razorpay test checkout
+The listing details screen now links to a polished checkout page. Checkout requires a listing loaded from the backend, a running Spring Boot/MySQL API, Razorpay test credentials configured only in the backend environment, and a custom native Android build containing `react-native-razorpay`.
+
+Set backend environment variables `RAZORPAY_KEY_ID=rzp_test_...` and `RAZORPAY_KEY_SECRET=...`. Never put the secret in Expo variables or mobile code. The server creates provider orders using the listing's database price in paise and verifies checkout signatures. If online checkout is not configured or a listing is only local demo data, the UI will not claim a payment was made.
+
+This is an integration foundation, **not production-ready real-money checkout**. Before accepting live payments, implement authenticated users and authorization, signed and idempotent provider webhooks, server-side payment-status/capture reconciliation, order state transitions, refunds/disputes, rate limits, audit logs, HTTPS, and an approved marketplace settlement model. Signature verification alone is not proof of final capture or settlement. Never store card details.
 
 ## Build an installable Android APK
 ```bash
@@ -39,18 +42,9 @@ eas build:configure
 eas build --platform android --profile preview
 ```
 
-The EAS `preview` profile is configured to produce an APK. To build locally, sign in to your Expo account and follow the build URL that EAS returns. For a GitHub Actions build, add a repository Actions secret named `EXPO_TOKEN` (created from your Expo account), then open **Actions → Android APK (EAS) → Run workflow**. The workflow only submits the build; EAS produces the signed APK and provides the download URL.
+The EAS `preview` profile is configured to produce an APK. For GitHub Actions, add an Actions secret named `EXPO_TOKEN`, then open **Actions → Android APK (EAS) → Run workflow**. EAS provides the build URL.
 
 For Google Play, use the production profile to create an Android App Bundle:
 ```bash
 eas build --platform android --profile production
 ```
-
-## Before launch
-- Implement secure sign-in and verification for the approved college email domain.
-- Add role/ownership authorization, input validation, rate limiting, and audit logging.
-- Store listing images in object storage, not in the database.
-- Persist chat with access controls and reporting/blocking.
-- Implement orders and a payment provider's server-side order creation, signature verification, idempotent webhooks, refunds, and dispute handling. Keep provider secrets only on the server; never store card data.
-- Decide and verify the marketplace settlement model before enabling real payments.
-- Use migrations instead of automatic schema updates in production, and configure TLS, backups, monitoring, and secrets.
