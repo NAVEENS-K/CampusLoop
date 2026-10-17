@@ -10,15 +10,6 @@ const muted = "#718096";
 const line = "#E6EAF0";
 const blue = "#4268F6";
 
-type OrderResponse = {
-  keyId: string;
-  orderId: string;
-  amount: number;
-  currency: string;
-  listingTitle: string;
-  description: string;
-};
-type RazorpayResult = { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string };
 
 export default function CheckoutScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -30,7 +21,7 @@ export default function CheckoutScreen() {
   const pay = () => {
     Alert.alert(
       "Assignment demo",
-      `This is a UI-only prototype. No payment has been processed.\\n\\nSelected method: ${method === "upi" ? "UPI & more" : "Card / net banking"}\\nDemo total: ₹${total.toLocaleString("en-IN")}`,
+      `This is a UI-only prototype. No payment has been processed.\n\nSelected method: ${method === "upi" ? "UPI & more" : "Card / net banking"}\nDemo total: ₹${total.toLocaleString("en-IN")}`,
       [
         { text: "Back to checkout", style: "cancel" },
         { text: "Done", onPress: () => router.replace("/(tabs)") },
