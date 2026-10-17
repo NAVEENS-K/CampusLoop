@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "payment_orders", indexes = @Index(name = "idx_payment_provider_order", columnList = "providerOrderId", unique = true))
+@Table(name = "payment_orders")
 public class PaymentOrder {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,7 +14,7 @@ public class PaymentOrder {
     private Long listingId;
     @Column(nullable = false)
     private Integer amountPaise;
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 30)
     private String status = "CREATED";
     @Column(nullable = false, updatable = false)
     private Instant createdAt = Instant.now();
