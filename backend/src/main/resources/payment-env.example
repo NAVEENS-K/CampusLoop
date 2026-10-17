@@ -1,0 +1,4 @@
+# Copy these into your local backend environment. Never commit live secrets.
+RAZORPAY_KEY_ID=rzp_test_replace_me
+RAZORPAY_KEY_SECRET=replace_me
+# Configure signed Razorpay webhooks separately before production.
