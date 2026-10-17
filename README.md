@@ -39,7 +39,7 @@ eas build:configure
 eas build --platform android --profile preview
 ```
 
-The EAS `preview` profile is configured to produce an APK. Sign in to your own Expo account and follow the build URL that EAS returns. This repository cannot produce a signed APK until an EAS account/build has been authorized.
+The EAS `preview` profile is configured to produce an APK. To build locally, sign in to your Expo account and follow the build URL that EAS returns. For a GitHub Actions build, add a repository Actions secret named `EXPO_TOKEN` (created from your Expo account), then open **Actions → Android APK (EAS) → Run workflow**. The workflow only submits the build; EAS produces the signed APK and provides the download URL.
 
 For Google Play, use the production profile to create an Android App Bundle:
 ```bash
