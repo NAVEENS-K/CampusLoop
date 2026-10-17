@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { useAppStore } from "@/data/AppStore";
 import { isApiConfigured } from "@/data/api";
+import RazorpayCheckout from "react-native-razorpay";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, "");
 const ink = "#17243A";
@@ -46,8 +47,7 @@ export default function CheckoutScreen() {
       const orderData = await orderResponse.json() as OrderResponse & { message?: string };
       if (!orderResponse.ok) throw new Error(orderData.message || "Could not start checkout. Check Razorpay test credentials.");
       // Razorpay's native SDK is available in an Expo development/production build, not Expo Go.
-      const Razorpay = require("react-native-razorpay").default;
-      const result = await Razorpay.open({
+      const result = await RazorpayCheckout.open({
         key: orderData.keyId,
         amount: orderData.amount,
         currency: orderData.currency,
@@ -55,6 +55,7 @@ export default function CheckoutScreen() {
         name: "CampusLoop",
         description: orderData.listingTitle,
         theme: { color: blue },
+        prefill: { method },
         retry: { enabled: true, max_count: 2 },
       }) as RazorpayResult;
       const verifyResponse = await fetch(`${API_URL}/api/payments/verify`, {
