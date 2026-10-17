@@ -82,11 +82,11 @@ export default function CheckoutScreen() {
           <Ionicons name="shield-checkmark-outline" size={22} color="#15803D" />
           <View style={{ flex: 1 }}><Text style={{ color: "#166534", fontWeight: "900" }}>Payment UI preview</Text><Text style={{ color: "#35664A", fontSize: 12, lineHeight: 18, marginTop: 4 }}>This assignment screen is a visual prototype only. No payment provider is connected and no money will be charged.</Text></View>
         </View>
-        <Pressable disabled={loading} onPress={pay} style={{ backgroundColor: ink, minHeight: 56, borderRadius: 17, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 9, marginTop: 22, opacity: loading ? 0.7 : 1 }}>
-          {loading ? <ActivityIndicator color="white" /> : <Ionicons name="lock-closed-outline" size={18} color="white" />}
-          <Text style={{ color: "white", fontSize: 15, fontWeight: "900" }}>{loading ? "Preparing secure checkout…" : `Pay ₹${total.toLocaleString("en-IN")}`}</Text>
+        <Pressable onPress={pay} style={{ backgroundColor: ink, minHeight: 56, borderRadius: 17, alignItems: "center", justifyContent: "center", flexDirection: "row", gap: 9, marginTop: 22 }}>
+          <Ionicons name="lock-closed-outline" size={18} color="white" />
+          <Text style={{ color: "white", fontSize: 15, fontWeight: "900" }}>Continue · ₹{total.toLocaleString("en-IN")}</Text>
         </Pressable>
-        <Text style={{ color: muted, fontSize: 11, lineHeight: 17, textAlign: "center", marginTop: 12 }}>Test credentials are required for online checkout. Inspect the item at a public campus meetup before accepting it.</Text>
+        <Text style={{ color: muted, fontSize: 11, lineHeight: 17, textAlign: "center", marginTop: 12 }}>UI prototype only · No payment will be processed.</Text>
       </ScrollView>
     </View>
   );
