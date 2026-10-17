@@ -1,0 +1,23 @@
+server:
+  port: ${PORT:8080}
+spring:
+  application:
+    name: campusloop-api
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/campusloop?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USERNAME:campusloop}
+    password: ${DB_PASSWORD:campusloop_local_only}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    default-property-inclusion: non_null
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
