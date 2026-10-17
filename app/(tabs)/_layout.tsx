@@ -1,4 +1,33 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-const icons:any={index:"compass-outline",search:"search-outline",sell:"add-circle-outline",inbox:"chatbubble-ellipses-outline",profile:"person-outline"};
-export default function TabsLayout(){return <Tabs screenOptions={({route})=>({headerShown:false,tabBarActiveTintColor:"#17243A",tabBarInactiveTintColor:"#788397",tabBarStyle:{height:64,paddingTop:6,paddingBottom:7},tabBarLabelStyle:{fontSize:10,fontWeight:"700"},tabBarIcon:({color,size})=><Ionicons name={icons[route.name]} size={size} color={color}/>})}><Tabs.Screen name="index" options={{title:"Explore"}}/><Tabs.Screen name="search" options={{title:"Search"}}/><Tabs.Screen name="sell" options={{title:"Sell"}}/><Tabs.Screen name="inbox" options={{title:"Inbox"}}/><Tabs.Screen name="profile" options={{title:"Profile"}}/></Tabs>
+
+const icons: Record<string, keyof typeof Ionicons.glyphMap> = {
+  index: "compass-outline",
+  search: "search-outline",
+  sell: "add-circle-outline",
+  inbox: "chatbubble-ellipses-outline",
+  profile: "person-outline",
+};
+
+export default function TabsLayout() {
+  return (
+    <Tabs
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarActiveTintColor: "#17243A",
+        tabBarInactiveTintColor: "#788397",
+        tabBarStyle: { height: 64, paddingTop: 6, paddingBottom: 7 },
+        tabBarLabelStyle: { fontSize: 10, fontWeight: "700" },
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name={icons[route.name] ?? "ellipse-outline"} size={size} color={color} />
+        ),
+      })}
+    >
+      <Tabs.Screen name="index" options={{ title: "Explore" }} />
+      <Tabs.Screen name="search" options={{ title: "Search" }} />
+      <Tabs.Screen name="sell" options={{ title: "Sell" }} />
+      <Tabs.Screen name="inbox" options={{ title: "Inbox" }} />
+      <Tabs.Screen name="profile" options={{ title: "Profile" }} />
+    </Tabs>
+  );
+}
