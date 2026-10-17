@@ -6,7 +6,6 @@ import { useAppStore } from "@/data/AppStore";
 
 export default function Profile() {
   const { listings, savedIds, myListingIds, toggleSaved } = useAppStore();
-  const [unused] = [0];
   const saved = listings.filter(x => savedIds.includes(x.id));
   const mine = listings.filter(x => myListingIds.includes(x.id));
   const opts = [
