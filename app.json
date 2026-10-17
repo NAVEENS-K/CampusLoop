@@ -1,0 +1,5 @@
+{
+ "expo":{"name":"CampusLoop","slug":"campusloop","scheme":"campusloop","version":"1.0.0","orientation":"portrait","userInterfaceStyle":"light",
+ "plugins":["expo-router",["expo-image-picker",{"photosPermission":"CampusLoop needs photos for product listings.","cameraPermission":"CampusLoop uses the camera for listing photos."}]],
+ "android":{"package":"com.campusloop.marketplace"}}
+}
