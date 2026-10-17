@@ -1,23 +1,39 @@
 # CampusLoop API (Spring Boot + MySQL)
 
-This folder is the backend foundation for the Expo client. It is not yet a production-ready deployment.
+This is the backend foundation for the Expo client and is not production-ready.
 
 ## Requirements
 - Java 21
 - Maven 3.9+
-- Docker Desktop (optional, for MySQL)
+- Docker Desktop (optional for local MySQL)
 
-## Local database
-From the repository root run `docker compose up -d mysql`. Copy `.env.example` to `.env` and configure secrets for your environment. Do not commit real secrets.
+## Run locally
+From the repository root:
+```bash
+docker compose up -d mysql
+cd backend
+mvn spring-boot:run
+```
+Health check: `GET /api/health`.
 
-## Run API
-From `backend/` run `mvn spring-boot:run`. The API listens on port 8080. Health check: `GET /api/health`.
+## Razorpay test checkout
+Set these variables in the backend process environment (never commit live credentials):
+- `RAZORPAY_KEY_ID=rzp_test_...`
+- `RAZORPAY_KEY_SECRET=...`
 
-## Current implementation scope
-- Spring Boot REST API scaffold
-- MySQL connection configuration
-- Health endpoint
-- Listing model and read endpoint
-- CORS configuration for local Expo development
+The mobile client needs `EXPO_PUBLIC_API_URL` set to the API host reachable from the device. For Android Emulator use `http://10.0.2.2:8080`; for a physical phone use the computer's LAN IP.
 
-Before launch, implement and test authentication/session management, college-email verification, authorization, chat persistence and moderation, listing image storage, order state transitions, payment-provider webhooks/idempotency, refunds/disputes, audit logs, rate limits, and production secrets. Never store card details. Do not enable live payments until a provider account and marketplace settlement model are approved.
+Endpoints:
+- `POST /api/payments/orders` with `{"listingId":123}`: creates a Razorpay order using the active listing's database price in paise.
+- `POST /api/payments/verify` with `{"razorpayOrderId":"...","razorpayPaymentId":"...","razorpaySignature":"..."}`: verifies the checkout signature and stores a signature-verified status.
+
+The client uses `react-native-razorpay`, a native SDK. **It does not run in Expo Go.** Use a custom Expo development build or EAS build after installing dependencies.
+
+## Production blockers
+This is an integration foundation only. Before accepting real money:
+- Add authentication and access/ownership authorization for listings and orders.
+- Verify provider payment state server-to-server and implement signed, idempotent Razorpay webhooks. A checkout signature alone does not prove capture or settlement.
+- Add order state transitions, idempotency, refunds, disputes, reconciliation and audit logs.
+- Approve the marketplace settlement model and comply with payment-provider requirements.
+- Configure HTTPS, rate limits, monitoring, migrations and production secrets.
+- Never store card details or expose the Razorpay secret in the Expo app.
